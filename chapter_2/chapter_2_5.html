@@ -3,24 +3,38 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>A Worked Example - </title>
+        <title>A Worked Example</title>
         
+        
+
+
+        <!-- Custom HTML head -->
+        
+
 
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
+        
+        <link rel="icon" href="../favicon.svg">
+        
+        
         <link rel="shortcut icon" href="../favicon.png">
+        
         <link rel="stylesheet" href="../css/variables.css">
         <link rel="stylesheet" href="../css/general.css">
         <link rel="stylesheet" href="../css/chrome.css">
+        
         <link rel="stylesheet" href="../css/print.css" media="print">
+        
 
         <!-- Fonts -->
         <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+        
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        
 
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../highlight.css">
@@ -36,7 +50,7 @@
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
             var path_to_root = "../";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
@@ -80,8 +94,8 @@
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <div id="sidebar-scrollbox" class="sidebar-scrollbox">
-                <ol class="chapter"><li class="expanded affix "><a href="../introduction.html">Timely Dataflow</a></li><li class="expanded "><a href="../chapter_0/chapter_0.html"><strong aria-hidden="true">1.</strong> Motivation</a></li><li><ol class="section"><li class="expanded "><a href="../chapter_0/chapter_0_0.html"><strong aria-hidden="true">1.1.</strong> A Simplest Example</a></li><li class="expanded "><a href="../chapter_0/chapter_0_1.html"><strong aria-hidden="true">1.2.</strong> A Simple Example</a></li><li class="expanded "><a href="../chapter_0/chapter_0_2.html"><strong aria-hidden="true">1.3.</strong> When to use Timely Dataflow</a></li><li class="expanded "><a href="../chapter_0/chapter_0_3.html"><strong aria-hidden="true">1.4.</strong> When not to use Timely Dataflow</a></li></ol></li><li class="expanded "><a href="../chapter_1/chapter_1.html"><strong aria-hidden="true">2.</strong> Core Concepts</a></li><li><ol class="section"><li class="expanded "><a href="../chapter_1/chapter_1_1.html"><strong aria-hidden="true">2.1.</strong> Dataflow</a></li><li class="expanded "><a href="../chapter_1/chapter_1_2.html"><strong aria-hidden="true">2.2.</strong> Timestamps</a></li><li class="expanded "><a href="../chapter_1/chapter_1_3.html"><strong aria-hidden="true">2.3.</strong> Progress</a></li></ol></li><li class="expanded "><a href="../chapter_2/chapter_2.html"><strong aria-hidden="true">3.</strong> Building Timely Dataflows</a></li><li><ol class="section"><li class="expanded "><a href="../chapter_2/chapter_2_1.html"><strong aria-hidden="true">3.1.</strong> Creating Inputs</a></li><li class="expanded "><a href="../chapter_2/chapter_2_2.html"><strong aria-hidden="true">3.2.</strong> Observing Outputs</a></li><li class="expanded "><a href="../chapter_2/chapter_2_3.html"><strong aria-hidden="true">3.3.</strong> Adding Operators</a></li><li class="expanded "><a href="../chapter_2/chapter_2_4.html"><strong aria-hidden="true">3.4.</strong> Creating Operators</a></li><li class="expanded "><a href="../chapter_2/chapter_2_5.html" class="active"><strong aria-hidden="true">3.5.</strong> A Worked Example</a></li></ol></li><li class="expanded "><a href="../chapter_3/chapter_3.html"><strong aria-hidden="true">4.</strong> Running Timely Dataflows</a></li><li><ol class="section"><li class="expanded "><a href="../chapter_3/chapter_3_1.html"><strong aria-hidden="true">4.1.</strong> Providing Input</a></li><li class="expanded "><a href="../chapter_3/chapter_3_2.html"><strong aria-hidden="true">4.2.</strong> Monitoring Probes</a></li><li class="expanded "><a href="../chapter_3/chapter_3_3.html"><strong aria-hidden="true">4.3.</strong> Operator Execution</a></li><li class="expanded "><a href="../chapter_3/chapter_3_4.html"><strong aria-hidden="true">4.4.</strong> Extending Dataflows</a></li></ol></li><li class="expanded "><a href="../chapter_4/chapter_4.html"><strong aria-hidden="true">5.</strong> Advanced Timely Dataflow</a></li><li><ol class="section"><li class="expanded "><a href="../chapter_4/chapter_4_1.html"><strong aria-hidden="true">5.1.</strong> Scopes</a></li><li class="expanded "><a href="../chapter_4/chapter_4_2.html"><strong aria-hidden="true">5.2.</strong> Iteration</a></li><li class="expanded "><a href="../chapter_4/chapter_4_3.html"><strong aria-hidden="true">5.3.</strong> Flow Control</a></li><li class="expanded "><a href="../chapter_4/chapter_4_4.html"><strong aria-hidden="true">5.4.</strong> Capture and Replay</a></li><li class="expanded "><a href="../chapter_4/chapter_4_5.html"><strong aria-hidden="true">5.5.</strong> Custom Datatypes</a></li></ol></li><li class="expanded "><a href="../chapter_5/chapter_5.html"><strong aria-hidden="true">6.</strong> Internals</a></li><li><ol class="section"><li class="expanded "><a href="../chapter_5/chapter_5_1.html"><strong aria-hidden="true">6.1.</strong> Communication</a></li><li class="expanded "><a href="../chapter_5/chapter_5_2.html"><strong aria-hidden="true">6.2.</strong> Progress Tracking</a></li></ol></li></ol>
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Timely Dataflow</a></li><li class="chapter-item expanded "><a href="../chapter_0/chapter_0.html"><strong aria-hidden="true">1.</strong> Motivation</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../chapter_0/chapter_0_0.html"><strong aria-hidden="true">1.1.</strong> A Simplest Example</a></li><li class="chapter-item expanded "><a href="../chapter_0/chapter_0_1.html"><strong aria-hidden="true">1.2.</strong> A Simple Example</a></li><li class="chapter-item expanded "><a href="../chapter_0/chapter_0_2.html"><strong aria-hidden="true">1.3.</strong> When to use Timely Dataflow</a></li><li class="chapter-item expanded "><a href="../chapter_0/chapter_0_3.html"><strong aria-hidden="true">1.4.</strong> When not to use Timely Dataflow</a></li></ol></li><li class="chapter-item expanded "><a href="../chapter_1/chapter_1.html"><strong aria-hidden="true">2.</strong> Core Concepts</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../chapter_1/chapter_1_1.html"><strong aria-hidden="true">2.1.</strong> Dataflow</a></li><li class="chapter-item expanded "><a href="../chapter_1/chapter_1_2.html"><strong aria-hidden="true">2.2.</strong> Timestamps</a></li><li class="chapter-item expanded "><a href="../chapter_1/chapter_1_3.html"><strong aria-hidden="true">2.3.</strong> Progress</a></li></ol></li><li class="chapter-item expanded "><a href="../chapter_2/chapter_2.html"><strong aria-hidden="true">3.</strong> Building Timely Dataflows</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../chapter_2/chapter_2_1.html"><strong aria-hidden="true">3.1.</strong> Creating Inputs</a></li><li class="chapter-item expanded "><a href="../chapter_2/chapter_2_2.html"><strong aria-hidden="true">3.2.</strong> Observing Outputs</a></li><li class="chapter-item expanded "><a href="../chapter_2/chapter_2_3.html"><strong aria-hidden="true">3.3.</strong> Adding Operators</a></li><li class="chapter-item expanded "><a href="../chapter_2/chapter_2_4.html"><strong aria-hidden="true">3.4.</strong> Creating Operators</a></li><li class="chapter-item expanded "><a href="../chapter_2/chapter_2_5.html" class="active"><strong aria-hidden="true">3.5.</strong> A Worked Example</a></li></ol></li><li class="chapter-item expanded "><a href="../chapter_3/chapter_3.html"><strong aria-hidden="true">4.</strong> Running Timely Dataflows</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../chapter_3/chapter_3_1.html"><strong aria-hidden="true">4.1.</strong> Providing Input</a></li><li class="chapter-item expanded "><a href="../chapter_3/chapter_3_2.html"><strong aria-hidden="true">4.2.</strong> Monitoring Probes</a></li><li class="chapter-item expanded "><a href="../chapter_3/chapter_3_3.html"><strong aria-hidden="true">4.3.</strong> Operator Execution</a></li><li class="chapter-item expanded "><a href="../chapter_3/chapter_3_4.html"><strong aria-hidden="true">4.4.</strong> Extending Dataflows</a></li></ol></li><li class="chapter-item expanded "><a href="../chapter_4/chapter_4.html"><strong aria-hidden="true">5.</strong> Advanced Timely Dataflow</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../chapter_4/chapter_4_1.html"><strong aria-hidden="true">5.1.</strong> Scopes</a></li><li class="chapter-item expanded "><a href="../chapter_4/chapter_4_2.html"><strong aria-hidden="true">5.2.</strong> Iteration</a></li><li class="chapter-item expanded "><a href="../chapter_4/chapter_4_3.html"><strong aria-hidden="true">5.3.</strong> Flow Control</a></li><li class="chapter-item expanded "><a href="../chapter_4/chapter_4_4.html"><strong aria-hidden="true">5.4.</strong> Capture and Replay</a></li><li class="chapter-item expanded "><a href="../chapter_4/chapter_4_5.html"><strong aria-hidden="true">5.5.</strong> Custom Datatypes</a></li></ol></li><li class="chapter-item expanded "><a href="../chapter_5/chapter_5.html"><strong aria-hidden="true">6.</strong> Internals</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../chapter_5/chapter_5_1.html"><strong aria-hidden="true">6.1.</strong> Communication</a></li><li class="chapter-item expanded "><a href="../chapter_5/chapter_5_2.html"><strong aria-hidden="true">6.2.</strong> Progress Tracking</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -90,37 +104,38 @@
 
             <div class="page">
                 
-                <div id="menu-bar" class="menu-bar">
-                    <div id="menu-bar-sticky-container">
-                        <div class="left-buttons">
-                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                                <i class="fa fa-bars"></i>
-                            </button>
-                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                                <i class="fa fa-paint-brush"></i>
-                            </button>
-                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
-                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
-                            </ul>
-                            
-                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
-                                <i class="fa fa-search"></i>
-                            </button>
-                            
-                        </div>
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
 
-                        <h1 class="menu-title"></h1>
+                    <h1 class="menu-title"></h1>
 
-                        <div class="right-buttons">
-                            <a href="../print.html" title="Print this book" aria-label="Print this book">
-                                <i id="print-button" class="fa fa-print"></i>
-                            </a>
-                            
-                        </div>
+                    <div class="right-buttons">
+                        
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        
                     </div>
                 </div>
 
@@ -153,9 +168,9 @@
 <p>Let's take the <code>word_count</code> example in the streaming direction. For whatever reason, your collection of text <em>changes</em>. As time moves along, some new texts are added and some old texts are retracted. We don't know why this happens, we just get told about the changes. Our new job is to <em>maintain</em> the <code>word_count</code> computation, in the face of arbitrary changes to the collection of texts, as promptly as possible.</p>
 <p>Let's model a changing corpus of text as a list of pairs of <em>times</em> which will be <code>u64</code> integers with a list of <em>changes</em> which are each pairs <code>(String, i64)</code> indicating the text and whether it has been added (+1) or removed (-1).</p>
 <p>We are going to write a program that is the moral equivalent of the following sequential Rust program:</p>
-<pre><pre class="playpen"><code class="language-rust">
-<span class="boring">#![allow(unused_variables)]
-fn main() {
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span>/// From a sequence of changes to the occurrences of text,
 /// produce the changing counts of words in that text.
 fn word_count(mut history: Vec&lt;(u64, Vec&lt;(String, i64)&gt;)&gt;) {
@@ -172,12 +187,12 @@ fn word_count(mut history: Vec&lt;(u64, Vec&lt;(String, i64)&gt;)&gt;) {
     }
 }
 <span class="boring">}
-</code></pre></pre>
+</span></code></pre></pre>
 <p>This program is fairly straightforward; hopefully you understand its intent, even if you aren't familiar with every method and type. However, the program is also very specific about what must happen: we process the history in order, and for each time we process the text changes in order. The program does not allow for any flexibility here.</p>
 <p>Our program will be a bit larger, but it will be more flexible. By specifying more about what we want to happen to the data, and less about which order this needs to happen, we will gain the ability to scale out to multiple workers across multiple machines.</p>
 <h2><a class="header" href="#starting-out-with-text-streams" id="starting-out-with-text-streams">Starting out with text streams</a></h2>
 <p>Let's first build a timely computation into which we can send text and which will show us the text back. Our next steps will be to put more clever logic in place, but let's start here to get some boiler-plate out of the way.</p>
-<pre><pre class="playpen"><code class="language-rust">extern crate timely;
+<pre><pre class="playground"><code class="language-rust">extern crate timely;
 
 use timely::dataflow::{InputHandle, ProbeHandle};
 use timely::dataflow::operators::{Inspect, Probe};
@@ -239,42 +254,42 @@ fn main() {
 <p>Let's add a simple operator that takes our text strings we supply as input and breaks them into words.</p>
 <p>More specifically, we will take <code>(String, i64)</code> pairs and break them into many <code>(String, i64)</code> pairs with the same <code>i64</code> value, because if we are adding some text we'll add the words, and if subtracting text we'll subtract the words.</p>
 <p>Rather than repeat all the code up above, I'm just going to show you the fragment you insert between <code>to_stream</code> and <code>inspect</code>:</p>
-<pre><pre class="playpen"><code class="language-rust"><span class="boring">extern crate timely;
-</span>#
-<span class="boring">use timely::dataflow::{InputHandle, ProbeHandle};
-use timely::dataflow::operators::{Inspect, Probe, Map};
-</span>#
-<span class="boring">fn main() {
-    // initializes and runs a timely dataflow.
-    timely::execute_from_args(std::env::args(), |worker| {
-</span>#
-<span class="boring">        // create input and output handles.
-        let mut input = InputHandle::new();
-        let mut probe = ProbeHandle::new();
-</span>#
-<span class="boring">        // build a new dataflow.
-        worker.dataflow(|scope| {
-            input.to_stream(scope)
+<pre><pre class="playground"><code class="language-rust"><span class="boring">extern crate timely;
+</span><span class="boring">
+</span><span class="boring">use timely::dataflow::{InputHandle, ProbeHandle};
+</span><span class="boring">use timely::dataflow::operators::{Inspect, Probe, Map};
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    // initializes and runs a timely dataflow.
+</span><span class="boring">    timely::execute_from_args(std::env::args(), |worker| {
+</span><span class="boring">
+</span><span class="boring">        // create input and output handles.
+</span><span class="boring">        let mut input = InputHandle::new();
+</span><span class="boring">        let mut probe = ProbeHandle::new();
+</span><span class="boring">
+</span><span class="boring">        // build a new dataflow.
+</span><span class="boring">        worker.dataflow(|scope| {
+</span><span class="boring">            input.to_stream(scope)
 </span>                 .flat_map(|(text, diff): (String, i64)|
                      text.split_whitespace()
                          .map(move |word| (word.to_owned(), diff))
                          .collect::&lt;Vec&lt;_&gt;&gt;()
                  )
 <span class="boring">                 .inspect(|x| println!(&quot;seen: {:?}&quot;, x))
-                 .probe_with(&amp;mut probe);
-        });
-</span>#
-<span class="boring">        // feed the dataflow with data.
-        for round in 0..10 {
-            input.send((&quot;round&quot;.to_owned(), 1));
-            input.advance_to(round + 1);
-            while probe.less_than(input.time()) {
-                worker.step();
-            }
-        }
-    }).unwrap();
-}
-</code></pre></pre>
+</span><span class="boring">                 .probe_with(&amp;mut probe);
+</span><span class="boring">        });
+</span><span class="boring">
+</span><span class="boring">        // feed the dataflow with data.
+</span><span class="boring">        for round in 0..10 {
+</span><span class="boring">            input.send((&quot;round&quot;.to_owned(), 1));
+</span><span class="boring">            input.advance_to(round + 1);
+</span><span class="boring">            while probe.less_than(input.time()) {
+</span><span class="boring">                worker.step();
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span><span class="boring">    }).unwrap();
+</span><span class="boring">}
+</span></code></pre></pre>
 <p>The <code>flat_map</code> method expects to be told how to take each record and turn it into an iterator. Here, we are saying that each received <code>text</code> should be split (at whitespace boundaries), and each resulting <code>word</code> should be paired up with <code>diff</code>. We do a weird <code>collect</code> thing at the end because <code>split_whitespace</code> tries to hand back pointers into <code>text</code> and it makes life complicated. Sorry, blame Rust (and then blame me for using Rust).</p>
 <p>This code should now show us the stream of <code>(word, diff)</code> pairs that fly by, but we still haven't done anything complicated with them yet.</p>
 <h2><a class="header" href="#maintaining-word-counts" id="maintaining-word-counts">Maintaining word counts</a></h2>
@@ -283,36 +298,36 @@ use timely::dataflow::operators::{Inspect, Probe, Map};
 <p>We will need to introduce <em>data exchange</em>, where the workers communicate with each other to shuffle the data so that the resulting distribution provides correct results. Specifically, we are going to distribute the data so that each individual word goes to the same worker, but the words themselves may be distributed across workers.</p>
 <p>Having exchanged the data, each worker will need a moment of care when it processes its inputs. Because the data are coming in from multiple workers, they may no longer be in &quot;time order&quot;; some workers may have moved through their inputs faster than others, and may be producing data for the next time while others lag behind. This operator means to produce the word count changes <em>as if processed sequentially</em>, and it will need to delay processing changes that come early.</p>
 <p>As before, I'm just going to show you the new code, which now lives just after <code>flat_map</code> and just before <code>inspect</code>:</p>
-<pre><pre class="playpen"><code class="language-rust"><span class="boring">extern crate timely;
-</span>#
-<span class="boring">use timely::dataflow::{InputHandle, ProbeHandle};
-use timely::dataflow::operators::{Inspect, Probe, Map};
-</span>#
-<span class="boring">use std::collections::HashMap;
-use timely::dataflow::channels::pact::Exchange;
-use timely::dataflow::operators::Operator;
-</span>#
-#
-<span class="boring">fn main() {
-    // initializes and runs a timely dataflow.
-    timely::execute_from_args(std::env::args(), |worker| {
-</span>#
-<span class="boring">        // create input and output handles.
-        let mut input = InputHandle::new();
-        let mut probe = ProbeHandle::new();
-</span>#
-<span class="boring">        // build a new dataflow.
-        worker.dataflow::&lt;usize,_,_&gt;(|scope| {
-            input.to_stream(scope)
-                .flat_map(|(text, diff): (String, i64)|
-                    text.split_whitespace()
-                        .map(move |word| (word.to_owned(), diff))
-                        .collect::&lt;Vec&lt;_&gt;&gt;()
-                )
+<pre><pre class="playground"><code class="language-rust"><span class="boring">extern crate timely;
+</span><span class="boring">
+</span><span class="boring">use timely::dataflow::{InputHandle, ProbeHandle};
+</span><span class="boring">use timely::dataflow::operators::{Inspect, Probe, Map};
+</span><span class="boring">
+</span><span class="boring">use std::collections::HashMap;
+</span><span class="boring">use timely::dataflow::channels::pact::Exchange;
+</span><span class="boring">use timely::dataflow::operators::Operator;
+</span><span class="boring">
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">    // initializes and runs a timely dataflow.
+</span><span class="boring">    timely::execute_from_args(std::env::args(), |worker| {
+</span><span class="boring">
+</span><span class="boring">        // create input and output handles.
+</span><span class="boring">        let mut input = InputHandle::new();
+</span><span class="boring">        let mut probe = ProbeHandle::new();
+</span><span class="boring">
+</span><span class="boring">        // build a new dataflow.
+</span><span class="boring">        worker.dataflow::&lt;usize,_,_&gt;(|scope| {
+</span><span class="boring">            input.to_stream(scope)
+</span><span class="boring">                .flat_map(|(text, diff): (String, i64)|
+</span><span class="boring">                    text.split_whitespace()
+</span><span class="boring">                        .map(move |word| (word.to_owned(), diff))
+</span><span class="boring">                        .collect::&lt;Vec&lt;_&gt;&gt;()
+</span><span class="boring">                )
 </span>                .unary_frontier(
                     Exchange::new(|x: &amp;(String, i64)| (x.0).len() as u64),
                     &quot;WordCount&quot;,
-                    |capability, operator_info| {
+                    |_capability, operator_info| {
 
                     // allocate operator-local storage.
                     let mut queues = HashMap::new();
@@ -354,20 +369,20 @@ use timely::dataflow::operators::Operator;
                     }
                 })
 <span class="boring">                 .inspect(|x| println!(&quot;seen: {:?}&quot;, x))
-                 .probe_with(&amp;mut probe);
-        });
-</span>#
-<span class="boring">        // feed the dataflow with data.
-        for round in 0..10 {
-            input.send((&quot;round&quot;.to_owned(), 1));
-            input.advance_to(round + 1);
-            while probe.less_than(input.time()) {
-                worker.step();
-            }
-        }
-    }).unwrap();
-}
-</code></pre></pre>
+</span><span class="boring">                 .probe_with(&amp;mut probe);
+</span><span class="boring">        });
+</span><span class="boring">
+</span><span class="boring">        // feed the dataflow with data.
+</span><span class="boring">        for round in 0..10 {
+</span><span class="boring">            input.send((&quot;round&quot;.to_owned(), 1));
+</span><span class="boring">            input.advance_to(round + 1);
+</span><span class="boring">            while probe.less_than(input.time()) {
+</span><span class="boring">                worker.step();
+</span><span class="boring">            }
+</span><span class="boring">        }
+</span><span class="boring">    }).unwrap();
+</span><span class="boring">}
+</span></code></pre></pre>
 <p>That was probably a lot to see all at once. So let's break down each of the things we did.</p>
 <pre><code class="language-rust ignore">.unary_frontier(
     Exchange::new(|x: &amp;(String, i64)| (x.0).len() as u64),
@@ -433,7 +448,7 @@ use timely::dataflow::operators::Operator;
 <p>Here we process each time in order (we sorted them!). For each time, we create a new output session from <code>output</code> using <code>time</code> More importantly, this actually needs to be the same type as <code>time</code> from before; the system is smart and knows that if you drop all references to a time you cannot create new output sessions. It's a feature, not a bug.</p>
 <p>We then proceed through each of the batches we enqueue, and through each of the <code>(word, diff)</code> pairs in each of the batches. I've decided that what we are going to do is update the count and announce the new count, but you could probably imagine doing lots of different things here.</p>
 <h2><a class="header" href="#the-finished-product" id="the-finished-product">The finished product</a></h2>
-<p>You can check out the result in <a href="https://github.com/frankmcsherry/timely-dataflow/blob/master/examples/wordcount.rs"><code>examples/wordcount.rs</code></a>. If you run it as written, you'll see output that looks like:</p>
+<p>You can check out the result in <a href="https://github.com/TimelyDataflow/timely-dataflow/blob/master/timely/examples/wordcount.rs"><code>examples/wordcount.rs</code></a>. If you run it as written, you'll see output that looks like:</p>
 <pre><code class="language-ignore">    Echidnatron% cargo run --example wordcount
         Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
         Running `target/debug/examples/wordcount`
@@ -449,7 +464,7 @@ use timely::dataflow::operators::Operator;
     seen: (&quot;round&quot;, 10)
     Echidnatron%
 </code></pre>
-<p>We kept sending the same word over and over, so its count goes up. Neat. If you'd like to run it with two workers, you just need to put <code>-- -w2</code> at the end of the command, like so:</p>
+<p>We kept sending the same word over and over, so its count went up. Neat. If you'd like to run it with two workers, you just need to put <code>-- -w2</code> at the end of the command, like so:</p>
 <pre><code class="language-ignore">    Echidnatron% cargo run --example wordcount -- -w2
         Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
         Running `target/debug/examples/wordcount -w2`
@@ -485,13 +500,13 @@ use timely::dataflow::operators::Operator;
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a href="../chapter_2/chapter_2_4.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../chapter_2/chapter_2_4.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a href="../chapter_3/chapter_3.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../chapter_3/chapter_3.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
@@ -504,10 +519,10 @@ use timely::dataflow::operators::Operator;
         
 
         
-        
+
         
         <script type="text/javascript">
-            window.playpen_copyable = true;
+            window.playground_copyable = true;
         </script>
         
 
