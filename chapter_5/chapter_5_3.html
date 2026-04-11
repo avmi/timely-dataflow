@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Communication</title>
+        <title>Containers</title>
 
 
         <!-- Custom HTML head -->
@@ -174,174 +174,38 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="communication"><a class="header" href="#communication">Communication</a></h1>
-<p>Communication in timely dataflow starts from the <code>timely_communication</code> crate. This crate includes not only communication, but is actually where we start up the various worker threads and establish their identities. As in timely dataflow, everything starts by providing a per-worker closure, but this time we are given only a channel allocator as an argument.</p>
-<p>Before continuing, I want to remind you that this is the <em>internals</em> section; you could write your code against this crate if you really want, but one of the nice features of timely dataflow is that you don’t have to. You can use a nice higher level layer, as discussed previously in the document.</p>
-<p>That being said, let’s take a look at the example from the <code>timely_communication</code> documentation, which is not brief but shouldn’t be wildly surprising either.</p>
-<pre class="playground"><code class="language-rust no_run">extern crate timely_bytes;
-extern crate timely_communication;
-
-use timely_communication::Bytesable;
-
-/// A wrapper that indicates the serialization/deserialization strategy.
-pub struct Message {
-    /// Text contents.
-    pub payload: String,
-}
-
-impl Bytesable for Message {
-    fn from_bytes(bytes: timely_bytes::arc::Bytes) -&gt; Self {
-        Message { payload: std::str::from_utf8(&amp;bytes[..]).unwrap().to_string() }
-    }
-
-    fn length_in_bytes(&amp;self) -&gt; usize {
-        self.payload.len()
-    }
-
-    fn into_bytes&lt;W: ::std::io::Write&gt;(&amp;self, writer: &amp;mut W) {
-        writer.write_all(self.payload.as_bytes()).unwrap();
-    }
-}
-
-fn main() {
-
-    // extract the configuration from user-supplied arguments, initialize the computation.
-    let (config, _free) = timely_communication::Config::from_args(std::env::args()).unwrap();
-    let guards = timely_communication::initialize(config, |mut allocator| {
-
-        println!("worker {} of {} started", allocator.index(), allocator.peers());
-
-        // allocates a pair of senders list and one receiver.
-        let (mut senders, mut receiver) = allocator.allocate(0);
-
-        // send typed data along each channel
-        for i in 0 .. allocator.peers() {
-            senders[i].send(Message { payload: format!("hello, {}", i)});
-            senders[i].done();
-        }
-
-        // no support for termination notification,
-        // we have to count down ourselves.
-        let mut received = 0;
-        while received &lt; allocator.peers() {
-
-            allocator.receive();
-
-            if let Some(message) = receiver.recv() {
-                println!("worker {}: received: &lt;{}&gt;", allocator.index(), message.payload);
-                received += 1;
-            }
-
-            allocator.release();
-        }
-
-        allocator.index()
-    });
-
-    // computation runs until guards are joined or dropped.
-    if let Ok(guards) = guards {
-        for guard in guards.join() {
-            println!("result: {:?}", guard);
-        }
-    }
-    else { println!("error in computation"); }
-}</code></pre>
-<p>There are a few steps here, and we’ll talk through the important parts in each of them.</p>
-<h2 id="configuration"><a class="header" href="#configuration">Configuration</a></h2>
-<p>There is only a limited amount of configuration you can currently do in a timely dataflow computation, and it all lives in the <code>initialize::Config</code> type. This type is an enumeration of the ways a timely computation could run:</p>
-<pre><code class="language-rust ignore">pub enum Config {
-    Thread,
-    Process(usize),
-    ProcessBinary(usize),
-    Cluster {
-        threads: usize,
-        process: usize,
-        addresses: Vec&lt;String&gt;,
-        report: bool,
-        log_fn: Box&lt;dyn Fn(CommunicationSetup) -&gt; Option&lt;Logger&lt;...&gt;&gt; + Send + Sync&gt;,
-    }
-}</code></pre>
-<p>The first variant <code>Thread</code> indicates that we will simply have one worker thread. This is a helpful thing to know because it means that all of our exchange channels can be dramatically simplified, just down to simple queues. The second variant <code>Process</code> corresponds to multiple worker threads within one process. The <code>ProcessBinary</code> variant is similar but uses zero-copy exchange channels. The <code>Cluster</code> variant is how we indicate that this process will participate in a larger clustered computation; we supply the number of threads, this process’ identifier, a list of addresses of all participants, a boolean for whether we would like some diagnostics about the established connections, and a logging function.</p>
-<p>The configuration is important because it determines how we build the channel allocator <code>allocator</code> that we eventually provide to each worker: <code>allocator</code> will be responsible for building communication channels to other workers, and it will need to know where these other workers are.</p>
-<h2 id="channel-allocators"><a class="header" href="#channel-allocators">Channel Allocators</a></h2>
-<p>The <code>allocator</code> reference bound by the worker closure is the only handle a worker has to the outside world (other than any values you move into the closure). It wraps up all the information we have about this workers place in the world, and provides the ability to assemble channels to the other workers.</p>
-<p>There are a few implementations of the <code>Allocate</code> trait, which is defined as</p>
-<pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span><span class="boring">trait Exchangeable {}
-</span><span class="boring">trait Push&lt;T&gt; {}
-</span><span class="boring">trait Pull&lt;T&gt; {}
-</span>pub trait Allocate {
-    fn index(&amp;self) -&gt; usize;
-    fn peers(&amp;self) -&gt; usize;
-    fn allocate&lt;T: Exchangeable&gt;(&amp;mut self, identifier: usize) -&gt; (Vec&lt;Box&lt;dyn Push&lt;T&gt;&gt;&gt;, Box&lt;dyn Pull&lt;T&gt;&gt;);
-}
-<span class="boring">}</span></code></pre>
-<p>These methods are the only functionality provided by <code>allocator</code>. A worker can ask for its own index, which is a number from zero up to the number of total peer workers (including itself), which it can also ask for. Perhaps most importantly, the worker can also request the allocation of a typed channel by providing an identifier, which is returned as a pair of (i) a list of <code>Push</code> endpoints into which it can send data, and (ii) a single <code>Pull</code> endpoint from which it can extract data. The list has length equal to the number of peers, and data sent into push endpoint <code>i</code> will eventually be received by the worker with index <code>i</code>, if it keeps pulling on its pull endpoint.</p>
-<p>The channels are various and interesting, but should be smartly arranged. The channel from the worker back to itself is just a queue, the channels within the same process are Rust’s inter-thread channels, and the channels between processes will automatically serialize and deserialize the type <code>T</code> for you (this is part of the <code>T: Exchangeable</code> requirement).</p>
-<p>One crucial assumption made in this design is that the channels can be identified by their order of creation. If two workers start executing in different processes, allocating multiple channels, the only way we will know how to align these channels is by identifiers handed out as the channels are allocated. I strongly recommend against non-deterministic channel construction, or “optimizing out” some channels from some workers.</p>
-<h3 id="the-bytesable-trait"><a class="header" href="#the-bytesable-trait">The Bytesable Trait</a></h3>
-<p>The <code>Bytesable</code> trait that we impose on all types that we exchange is a “marker trait”: it wraps several constraints together, like so</p>
-<pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span><span class="boring">use std::any::Any;
-</span><span class="boring">trait Bytesable {}
-</span>pub trait Exchangeable : Send+Any+Bytesable { }
-impl&lt;T: Send+Any+Bytesable&gt; Exchangeable for T { }
-<span class="boring">}</span></code></pre>
-<p>These traits are all Rust traits, except for <code>Bytesable</code>, and they mostly just say that we can send the data around. The <code>Bytesable</code> trait is something we introduce, and asks for methods to get into and out of a sequence of bytes.</p>
-<pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span><span class="boring">extern crate timely_bytes;
-</span><span class="boring">use timely_bytes::arc::Bytes;
-</span>pub trait Bytesable {
-    fn into_bytes&lt;W: ::std::io::Write&gt;(&amp;self, writer: &amp;mut W);
-    fn from_bytes(bytes: Bytes) -&gt; Self;
-    fn length_in_bytes(&amp;self) -&gt; usize;
-}
-<span class="boring">}</span></code></pre>
-<p>The timely crate has a <code>Bincode</code> wrapper type that implements <code>Bytesable</code> for any types that implement <code>serde::Serialize + for&lt;'a&gt; serde::Deserialize&lt;'a&gt;</code>.
-You can also implement them on your own though, as we have done in the example.</p>
-<h2 id="push-and-pull"><a class="header" href="#push-and-pull">Push and Pull</a></h2>
-<p>The two traits <code>Push</code> and <code>Pull</code> are the heart of the communication underlying timely dataflow. They are very simple, but relatively subtle and interesting and perhaps even under-exploited.</p>
-<h3 id="push"><a class="header" href="#push">Push</a></h3>
-<p>The <code>Push</code> trait looks like so (with two helper methods elided):</p>
-<pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>pub trait Push&lt;T&gt; {
-    fn push(&amp;mut self, element: &amp;mut Option&lt;T&gt;);
-}
-<span class="boring">}</span></code></pre>
-<p>That’s all of it.</p>
-<p>The <code>push</code> method takes a mutable reference to an option wrapped around a thing. This is your way of telling the communication layer that, (i) if the reference points to a thing, you’d really like to push it into the channel, and (ii) if the reference doesn’t point to a thing this is the cue that you might walk away for a while. It is important to send a <code>None</code> if you would like to ensure that whatever you’ve <code>push</code>ed in the past should be guaranteed to get through without further work on your part.</p>
-<p>Now, we didn’t need a mutable reference to do that; we could have just had the argument type be <code>Option&lt;T&gt;</code>, or had two methods <code>send</code> and <code>done</code> (those are the elided helper methods).</p>
-<p>This framing allows for fairly natural and <em>stable</em> zero-copy communication. When you want to send a buffer of records, you wrap it up as <code>Some(buffer)</code> and call <code>push</code>. Once <code>push</code> returns, the channel has probably taken your buffer, but it has the opportunity to leave something behind for you. This is a very easy way for the communication infrastructure to <em>return</em> resources to you. In fact, even if you have finished sending messages, it may make sense to repeatedly send mutable references to <code>None</code> for as long as the channel has memory to hand you.</p>
-<p>Although not used by timely at the moment, this is also designed to support zero copy networking where the communication layer below (e.g. something like RDMA) operates more efficiently if it allocates the buffers for you (e.g. in dedicated memory pinned by the hardware). In this case, <code>push</code> is a great way to <em>request</em> resources from the channel. Similarly, it can serve as a decent back-channel to return owned resources for the underlying typed data (e.g., you <code>push</code>ed a list of <code>String</code> elements, and once used they could be returned to you to be reused).</p>
-<h3 id="pull"><a class="header" href="#pull">Pull</a></h3>
-<p>The <code>Pull</code> trait is the dual to <code>Push</code>: it allows someone on the other end of a channel to request whatever the channel has in store next, also as a mutable reference to an option wrapped around the type.</p>
-<pre class="playground"><code class="language-rust no_run"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>pub trait Pull&lt;T&gt; {
-    fn pull(&amp;mut self) -&gt; &amp;mut Option&lt;T&gt;;
-}
-<span class="boring">}</span></code></pre>
-<p>As before, the mutable reference and option allow the two participants to communicate about the availability of data, and to return resources if appropriate. For example, it is very natural after the call to <code>pull</code> to claim any <code>T</code> made available with a <code>::std::mem::swap</code> which puts something else in its place (either <code>Some(other)</code> or <code>None</code>). If the puller has some data to return, perhaps data it received from wherever it was pushing data at, this is a great opportunity to move it back up the communication chain.</p>
-<p>I’m not aware of a circumstance where you might be obliged to call <code>pull</code> and set the result to <code>None</code> to signal that you may stop calling <code>Pull</code>. It seems like it could be important, if these methods really are dual, but I don’t see how just yet.</p>
-<h2 id="guarded-computation"><a class="header" href="#guarded-computation">Guarded Computation</a></h2>
-<p>The call to <code>initialize</code> returns a</p>
-<pre><code class="language-rust ignore">Result&lt;WorkerGuards&lt;T&gt;,String&gt;</code></pre>
-<p>which is Rust’s approach to error handling: we either get some worker guards or a <code>String</code> explaining why things went wrong, perhaps because we weren’t able to establish connections with all of the workers, or something like that. The <code>WorkerGuards&lt;T&gt;</code> is a list of thread join handles, <code>::std::thread::JoinHandle&lt;T&gt;</code>, which is something that we can wait on and expect a <code>T</code> in return. Each of these handles allow us to wait on the local worker threads, and collect whatever they produce as output.</p>
-<p>We’ve wrapped the handles up in a special type, <code>WorkerGuards</code>, because the default behavior otherwise should you just discard the result is for the threads to detach, which results in the <code>main</code> thread exiting and the workers just getting killed. This way, even if you ignore the result we will wait for the worker threads to complete. If you would like your main thread to exit and kill off the workers, you have other ways of doing this.</p>
+                        <h1 id="containers"><a class="header" href="#containers">Containers</a></h1>
+<p>On a high level, Timely sends along dataflow edges. Underneath however, it needs to send and process batches of data to amortize processing overhead. In this section, we walk through the container abstraction, which is how Timely interfaces with batches of data.</p>
+<p>A container represents a batch of data with an interface to enable progress tracking and extracting data. Progress tracking requires that containers have a length, which does not change independent of container modifications. Reading data out of a container is useful for several high-level operators and sessions, but not otherwise required.</p>
+<p>Progress tracking requires that the length of a container stays the same between sending and receiving a container. The length must be additive, meaning that two containers combined must result in a container that has the sum of the lengths of the original containers. (Vectors satisfy the properties, but sets do not.)</p>
+<p>The container trait defines two associated types, <code>Item</code> for moving data, and <code>ItemRef</code> for reading data. Both are lifetimed, meaning an implelemntation can select to return owned data or references, depending on the constraints imposed by its data representation. Related, the trait defines an <code>iter()</code> function that reads the contents, and a <code>drain()</code> that removes the contents.</p>
+<p>In timely, we decouple write- and read-halves of a containers, as expressed by the <code>PushInto</code> trait. It describes how a target can absorb a datum as self, without requiring that the container knows about self. This allows a container to absorb an owned type and merely present dereferenced variants of the owned type when reading. For example, a container could accept <code>String</code> objects, but only permit reading <code>&amp;str</code>.</p>
+<h2 id="capacity-considerations"><a class="header" href="#capacity-considerations">Capacity considerations</a></h2>
+<p>Timely wants to send containers of consistent size. In the past, this was a vector of 1024 elements, but this concept scales poorly to data that has a different layout.</p>
+<p>What we want to achieve is:</p>
+<ul>
+<li>Timely makes progress when processing large amounts of data. An implementation that buffers all data and only releases it once time advances does not have this property.</li>
+<li>Containers have consistent size to minimize stress for the memory allocator.</li>
+</ul>
+<h2 id="core-operators"><a class="header" href="#core-operators">Core operators</a></h2>
+<p>In Timely, we provide a set of <code>core</code> operators that are generic on the container type they can handle.
+In most cases, the <code>core</code> operators are an immediate generalization of their non-core variant, providing the semantically equivalent functionality.</p>
+<h2 id="limitations"><a class="header" href="#limitations">Limitations</a></h2>
+<p>Each operator over arbitrary containers either returns an equal container, or needs to be parameterized to indicate the desired output type.
+This is problematic when composing a high-level operator from smaller building blocks, such as the broadcast operator.
+The broadcast operator for vectors maps each datum to a <code>(target, datum)</code> pair, where it repeats <code>datum</code> for each target.
+Subsequent operators exchange the data and unwrap the <code>datum</code> from the tuple.
+Defining this with specific containers in mind is simple, however, we do not have a mechanism to express this for arbitrary containers.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../chapter_5/chapter_5.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../chapter_5/chapter_5_2.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../chapter_5/chapter_5_2.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../chapter_5/chapter_5_4.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -351,11 +215,11 @@ You can also implement them on your own though, as we have done in the example.<
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../chapter_5/chapter_5.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../chapter_5/chapter_5_2.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../chapter_5/chapter_5_2.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../chapter_5/chapter_5_4.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
