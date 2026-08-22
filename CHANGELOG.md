@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.31.1](https://github.com/avmi/timely-dataflow/compare/timely-v0.31.0...timely-v0.31.1) - 2026-08-22
+
+### Other
+
+- Messages stamped by sets of capabilities ([#813](https://github.com/avmi/timely-dataflow/pull/813))
+
 ## [0.31.0](https://github.com/TimelyDataflow/timely-dataflow/compare/timely-v0.30.0...timely-v0.31.0) - 2026-07-14
 
 This release continues excising monomorphization sprawl from the progress subsystem: `PortConnectivity`'s map becomes a sorted `Vec`, removing the last `BTreeMap` and `HashMap` from progress tracking (9.1% fewer LLVM lines on the `bfs` example), alongside clone and allocation trimming on hot paths.
